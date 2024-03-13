@@ -1,0 +1,53 @@
+.categories-grid-container {
+	display: grid;
+	grid-template-areas: 'pic1 pic1 pic2 pic3' 'pic1 pic1 pic4 pic5';
+	height: 500px;
+	gap: 8px;
+   position: relative;
+
+   
+	.image-box {
+		overflow: hidden;
+      position: relative;
+      cursor: pointer;
+
+      img {
+         width: 100%;
+         height: 100%;
+         object-fit: cover;
+         transition: 1s cubic-bezier(0.075, 0.62, 0.165, 0.75);
+      }
+   
+      img:hover {
+         transform: scale(1.15);
+      }
+	}
+
+	.image-box:nth-child(1) {
+		grid-area: pic1;
+		border-top-right-radius: 8px;
+		border-bottom-right-radius: 8px;
+	}
+
+	.image-box:nth-child(2) {
+		grid-area: pic2;
+		border-radius: 8px;
+	}
+
+	.image-box:nth-child(3) {
+		grid-area: pic3;
+		border-top-left-radius: 8px;
+		border-bottom-left-radius: 8px;
+	}
+
+	.image-box:nth-child(4) {
+		grid-area: pic4;
+		border-radius: 8px;
+	}
+
+	.image-box:nth-child(5) {
+		grid-area: pic5;
+		border-top-left-radius: 8px;
+		border-bottom-left-radius: 8px;
+	}
+}
