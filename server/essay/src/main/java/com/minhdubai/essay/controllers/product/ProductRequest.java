@@ -14,4 +14,5 @@ public class ProductRequest {
     private ProductDto product;
     private Integer categoryId;
     private Integer brandId;
+    private Integer imageId;
 }

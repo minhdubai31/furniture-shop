@@ -1,28 +1,38 @@
+import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-import Header from './layout/components/Header';
-import Footer from './layout/components/Footer';
-
-import Home from './layout/pages/Home';
-import Products from './layout/pages/Products';
-import Login from './layout/pages/Login';
-import SignUp from './layout/pages/SignUp';
-
+import Home from './pages/Home';
+import Products from './pages/Products';
+import Login from './pages/Login';
+import SignUp from './pages/SignUp';
+import NotFound from './pages/NotFound';
+import RequireAuth from './components/RequireAuth/RequireAuth';
+import Logout from './pages/Logout';
+import useRefreshToken from './hooks/useRefreshToken';
 
 function App() {
+	const refresh = useRefreshToken();
+	useEffect(() => {
+		refresh();
+	}, []);
+
 	return (
 		<div>
-			<Header />
-
 			{/* Routes to page content */}
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/products" element={<Products />} />
-				<Route path="/users/login" element={<Login />} />
-				<Route path="/users/signup" element={<SignUp />} />
-			</Routes>
+				<Route path="/login" element={<Login />} />
+				<Route path="/signup" element={<SignUp />} />
+				<Route path="/logout" element={<Logout />} />
 
-			<Footer />
+
+				{/* Need to login before can access */}
+				<Route element={<RequireAuth />}>{/* Add routes here */}</Route>
+
+				{/* Not found page */}
+				<Route path="*" element={<NotFound />} />
+			</Routes>
 		</div>
 	);
 }

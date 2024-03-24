@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/product")
+@CrossOrigin
 public class ProductController {
 
     private final ProductService productService;
@@ -26,7 +27,8 @@ public class ProductController {
         ProductDto savedProduct = productService.create(
                 request.getProduct(),
                 request.getCategoryId(),
-                request.getBrandId()
+                request.getBrandId(),
+                request.getImageId()
         );
 
         return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
@@ -67,7 +69,8 @@ public class ProductController {
                 id,
                 request.getProduct(),
                 request.getCategoryId(),
-                request.getBrandId()
+                request.getBrandId(),
+                request.getImageId()
         );
 
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);

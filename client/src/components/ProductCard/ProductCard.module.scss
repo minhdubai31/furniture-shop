@@ -1,0 +1,16 @@
+.product-card-container:hover .product-card-footer {
+   visibility: visible;
+   animation: fade-slide-in .2s forwards;
+   transition: visibility .2s;
+   cursor: pointer;
+}
+
+@keyframes fade-slide-in {
+   from {
+      opacity: 0;
+      transform: translate(-50%, -10px);
+   }
+   to {
+      opacity: 1;
+   }
+}

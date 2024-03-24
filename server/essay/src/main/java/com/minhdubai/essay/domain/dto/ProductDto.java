@@ -37,6 +37,9 @@ public class ProductDto {
     private Integer salePrice;
     private Integer remainingAmount = 0;
 
+    @JsonIgnoreProperties({"products", "productImages"})
+    private ImageDto image;
+
     @JsonIgnoreProperties("products")
     private CategoryDto category;
 
@@ -46,7 +49,7 @@ public class ProductDto {
     @JsonIgnoreProperties("products")
     private BrandDto brand;
 
-    @JsonIgnoreProperties("products")
+    @JsonIgnoreProperties({"products", "productImages"})
     private List<ImageDto> gallery = new ArrayList<>();
 
     @JsonIgnore

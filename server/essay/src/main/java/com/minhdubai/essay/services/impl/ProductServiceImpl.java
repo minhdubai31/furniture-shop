@@ -27,7 +27,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public ProductDto create(ProductDto product, Integer categoryId, Integer brandId) {
+    public ProductDto create(ProductDto product, Integer categoryId, Integer brandId, Integer imageId) {
         ProductEntity newProduct = productMapper.mapFrom(product);
 
         if(categoryId != null) {
@@ -40,6 +40,12 @@ public class ProductServiceImpl implements ProductService {
             BrandEntity brand = brandRepository.findById(brandId)
                     .orElseThrow(() -> new EntityNotFoundException("Brand with id = " + brandId + " not found"));
             newProduct.setBrand(brand);
+        }
+
+        if(imageId != null) {
+            ImageEntity image = imageRepository.findById(imageId)
+                    .orElseThrow(() -> new EntityNotFoundException("Image with id = " + imageId + " not found"));
+            newProduct.setImage(image);
         }
 
         ProductEntity savedProduct = productRepository.save(newProduct);
@@ -73,7 +79,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto update(Integer id, ProductDto updateFields, Integer newCategoryId, Integer newBrandId) {
+    public ProductDto update(Integer id, ProductDto updateFields, Integer newCategoryId, Integer newBrandId, Integer newImageId) {
         ProductEntity updateProduct = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product with id = " + id + " not found"));
 
@@ -87,6 +93,12 @@ public class ProductServiceImpl implements ProductService {
             BrandEntity updateBrand = brandRepository.findById(newBrandId)
                    .orElseThrow(() -> new EntityNotFoundException("Brand with id = " + newBrandId + " not found"));
             updateProduct.setBrand(updateBrand);
+        }
+
+        if(newImageId != null) {
+            ImageEntity image = imageRepository.findById(newImageId)
+                    .orElseThrow(() -> new EntityNotFoundException("Image with id = " + newImageId + " not found"));
+            updateProduct.setImage(image);
         }
 
         if (updateFields != null) {

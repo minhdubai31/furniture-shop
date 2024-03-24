@@ -51,6 +51,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .refresh_token(refreshToken)
+                .role(newUser.getRole())
+                .name(newUser.getName())
                 .build();
     }
 
@@ -73,6 +75,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .refresh_token(refreshToken)
+                .role(user.getRole())
+                .name(user.getName())
                 .build();
     }
 
@@ -83,7 +87,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         final String username;
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return;
+            throw new IOException("Invalid refresh token");
         }
 
 //      Remove "Bearer " from header
@@ -91,12 +95,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         username = jwtService.extractUsername(refreshToken);
 
         if (username != null) {
-            UserDetails userDetails = userMapper.mapFrom(userService.findByUsername(username).orElseThrow());
+            UserDto user = userService.findByUsername(username).orElseThrow();
+            UserDetails userDetails = userMapper.mapFrom(user);
             if (jwtService.isTokenValid(refreshToken, userDetails)) {
                 var jwtToken = jwtService.generateToken(userDetails);
                 var authResponse = AuthenticationResponse.builder()
                         .token(jwtToken)
                         .refresh_token(refreshToken)
+                        .role(user.getRole())
+                        .name(user.getName())
                         .build();
 
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);

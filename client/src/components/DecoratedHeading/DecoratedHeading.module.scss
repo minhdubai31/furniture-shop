@@ -1,0 +1,18 @@
+.decorated-heading:before, .decorated-heading:after {
+   content: " ";
+   display: block;
+   position: absolute;
+   top: 50%;
+   background-color:#000;
+   width: 40px;
+   height: 1px;
+}
+
+.decorated-heading:before {
+   left: -24px;
+}
+
+.decorated-heading:after {
+   right: -24px;
+}
+

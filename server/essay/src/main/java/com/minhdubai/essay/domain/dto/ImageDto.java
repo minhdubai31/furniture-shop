@@ -26,8 +26,11 @@ public class ImageDto {
     private String name;
     private String path;
 
-    @JsonIgnoreProperties("gallery")
+    @JsonIgnoreProperties({"gallery", "image"})
     private List<ProductDto> products = new ArrayList<>();
+
+    @JsonIgnoreProperties({"gallery", "image"})
+    private List<ProductDto> productImages = new ArrayList<>();
 
     @JsonIgnoreProperties("logo")
     private BrandDto brand;

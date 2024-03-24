@@ -36,6 +36,9 @@ public class ProductEntity {
     private Integer remainingAmount;
     private Integer favoritesAmount;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private ImageEntity image;
+
     @CreationTimestamp
     private Instant createdAt;
 

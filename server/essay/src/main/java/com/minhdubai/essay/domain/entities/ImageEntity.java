@@ -31,9 +31,17 @@ public class ImageEntity {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "logo")
     private List<BrandEntity> brand = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "image", cascade = CascadeType.PERSIST)
+    private List<ProductEntity> productImages = new ArrayList<>();
+
     @CreationTimestamp
     private Instant createdAt;
 
     @UpdateTimestamp
     private Instant lastUpdatedAt;
+
+    @PreRemove
+    public void setAllProductImagesToNull() {
+        productImages.forEach(product -> product.setImage(null));
+    }
 }
