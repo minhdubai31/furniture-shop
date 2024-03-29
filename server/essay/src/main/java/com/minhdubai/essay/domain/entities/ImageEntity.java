@@ -24,6 +24,7 @@ public class ImageEntity {
 
     private String name;
     private String path;
+    private String thumbnailPath;
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "gallery")
     private List<ProductEntity> products = new ArrayList<>();

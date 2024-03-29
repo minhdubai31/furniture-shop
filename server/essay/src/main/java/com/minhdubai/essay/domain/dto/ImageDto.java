@@ -23,6 +23,7 @@ public class ImageDto {
     private Integer id;
     private String name;
     private String path;
+    private String thumbnailPath;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<ProductDto> products = new ArrayList<>();

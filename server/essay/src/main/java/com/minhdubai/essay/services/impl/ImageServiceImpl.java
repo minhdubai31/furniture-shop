@@ -8,6 +8,8 @@ import com.minhdubai.essay.repositories.ImageRepository;
 import com.minhdubai.essay.services.ImageService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.name.Rename;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,13 +48,19 @@ public class ImageServiceImpl implements ImageService {
         // Target the file to be saved
         File targetFile = new File(filePath);
 
+
         // Save the file to the specified path
         image.transferTo(targetFile);
+
+        Thumbnails.of(targetFile)
+                .size(300, 300)
+                .toFiles(Rename.PREFIX_DOT_THUMBNAIL);
 
         // Create information to database
         ImageDto imageDto = ImageDto.builder()
                 .name(originalFileName)
                 .path(urlPath + targetFile.getName())
+                .thumbnailPath(urlPath + "thumbnail." + targetFile.getName())
                 .build();
 
         ImageEntity savedImage = imageRepository.save(imageMapper.mapFrom(imageDto));
@@ -89,12 +97,15 @@ public class ImageServiceImpl implements ImageService {
     public void destroy(Integer id) {
         ImageEntity deleteImage = imageRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Image with id= " + id + " not found"));
-        String imageFilePath = uploadPath + deleteImage.getPath().substring(urlPath.length() -1);
-        File imageFile = new File(imageFilePath);
 
-        if (imageFile.delete()) {
-            imageRepository.delete(deleteImage);
-        } else {
+        String imageFilePath = uploadPath + deleteImage.getPath().substring(urlPath.length() -1);
+        String thumbnailFilePath = uploadPath + deleteImage.getThumbnailPath().substring(urlPath.length() -1);
+
+        File imageFile = new File(imageFilePath);
+        File thumbnailFile = new File(thumbnailFilePath);
+
+        imageRepository.delete(deleteImage);
+        if (!(imageFile.delete() && thumbnailFile.delete())) {
             throw new RuntimeException("Could not delete image file!");
         }
     }
