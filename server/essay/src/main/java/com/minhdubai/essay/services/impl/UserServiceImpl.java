@@ -8,6 +8,8 @@ import com.minhdubai.essay.repositories.*;
 import com.minhdubai.essay.services.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +28,8 @@ public class UserServiceImpl implements UserService {
     private final FavoriteRepository favoriteRepository;
     private final Mapper<AddressEntity, AddressDto> addressMapper;
     private final Mapper<UserEntity, UserDto> userMapper;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDto create(final UserDto user) {
@@ -54,6 +58,41 @@ public class UserServiceImpl implements UserService {
     public Optional<UserDto> findByUsername(String username) {
         Optional<UserEntity> foundUser = userRepository.findByUsername(username);
         return foundUser.map(userMapper::mapTo);
+    }
+
+    @Override
+    public UserDto update(Integer id, UserDto updateFields) {
+        UserEntity updateUser = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User with id " + id + " not found"));
+
+        if (updateFields != null) {
+            if (updateFields.getEmail() != null) {
+                updateUser.setEmail(updateFields.getEmail());
+            }
+
+            if (updateFields.getRole() != null) {
+                updateUser.setRole(updateFields.getRole());
+            }
+
+            if (updateFields.getPhoneNumber() != null) {
+                updateUser.setPhoneNumber(updateFields.getPhoneNumber());
+            }
+
+            if (updateFields.getPassword() != null) {
+                updateUser.setPassword(passwordEncoder.encode(updateFields.getPassword()));
+            }
+        }
+
+        UserEntity updatedUser = userRepository.save(updateUser);
+        return userMapper.mapTo(updatedUser);
+    }
+
+    @Override
+    public void destroy(Integer id) {
+        UserEntity deleteUser = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User with id " + id + " not found"));
+
+        userRepository.delete(deleteUser);
     }
 
     @Override
@@ -154,5 +193,11 @@ public class UserServiceImpl implements UserService {
         if (existedFavorite != null) {
             favoriteRepository.delete(existedFavorite);
         }
+    }
+
+    @Override
+    public Optional<UserDto> loggedInUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return findByUsername(username);
     }
 }

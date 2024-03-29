@@ -66,11 +66,12 @@ function Login() {
 			const refreshToken = response?.data?.refresh_token;
 			const role = response?.data?.role;
 			const name = response?.data?.name;
+			const resUsername = response?.data?.username;
 
 			localStorage.setItem('essayAccessToken', accessToken);
 			localStorage.setItem('essayRefreshToken', refreshToken);
 
-			setAuth({ name, role });
+			setAuth({ name, role, username: resUsername });
 			navigate('/');
 		} catch (err) {
 			console.log(err);

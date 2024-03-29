@@ -1,17 +1,17 @@
-import { Navigate } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
+import { Navigate } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
+import { useEffect } from 'react';
 
 function Logout() {
 	const { setAuth } = useAuth();
+	useEffect(() => {
+		setAuth(null);
+	}, []);
 
 	localStorage.removeItem('essayAccessToken');
 	localStorage.removeItem('essayRefreshToken');
 
-	setAuth(null);
-
-	return (
-		<Navigate to="/" replace />
-	)
+	return <Navigate to="/" replace />;
 }
 
 export default Logout;

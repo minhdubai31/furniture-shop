@@ -1,79 +1,85 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
 	faMagnifyingGlass,
 	faMicrophone,
 } from '@fortawesome/free-solid-svg-icons';
-import useSpeechToText from 'react-hook-speech-to-text';
+
+import SpeechRecognition, {
+	useSpeechRecognition,
+} from 'react-speech-recognition';
+
 import soundStartRecording from './audio/start_recording.mp3';
 import soundStopRecorded from './audio/stop_recorded.mp3';
 
 function SearchBar() {
-	const {
-		interimResult,
-		isRecording,
-		results,
-		setResults,
-		startSpeechToText,
-		stopSpeechToText,
-	} = useSpeechToText({
-		continuous: false,
-		crossBrowser: true,
-		googleApiKey: process.env.REACT_APP_GOOGLE_SPEECH_TO_TEXT_API_KEY,
-		useLegacyResults: false,
-		speechRecognitionProperties: {
-			lang: 'vi-VN',
-			interimResults: true, // Allows for displaying real-time speech results
-		},
-	});
+	// Use web speech api
+	const { transcript, finalTranscript, listening } = useSpeechRecognition();
+
+	// Configure the speech recognition language
+	const startListening = () =>
+		SpeechRecognition.startListening({ language: 'vi' });
+	const stopListening = () => SpeechRecognition.stopListening();
+
+	// Search input
+	const [searchInput, setSearchInput] = useState('');
+	const [firstRender, setFirstRender] = useState(true);
 
 	const microphone = useRef();
 	const behindMicrophone = useRef();
 	const audioStartRecording = new Audio(soundStartRecording);
 	const audioStopRecorded = new Audio(soundStopRecorded);
 
-	const toggleMicrophoneAnimation = () => {
-		microphone.current.classList.toggle('text-white/50');
-		behindMicrophone.current.classList.toggle('bg-white/25');
-		behindMicrophone.current.classList.toggle('animate-ping');
-	}
-
 	useEffect(() => {
-		if (!isRecording) {
-			if (results.length > 0) {
-				setResults(results.pop().transcript);
-				toggleMicrophoneAnimation();
+
+		const addMicrophoneAnimation = () => {
+			microphone.current.classList.add('!text-white');
+			behindMicrophone.current.classList.add('bg-white/25');
+			behindMicrophone.current.classList.add('animate-ping');
+		};
+
+		const removeMicrophoneAnimation = () => {
+			microphone.current.classList.remove('!text-white');
+			behindMicrophone.current.classList.remove('bg-white/25');
+			behindMicrophone.current.classList.remove('animate-ping');
+		};
+
+		if (!listening) {
+			removeMicrophoneAnimation();
+			if (!firstRender) {
+				setSearchInput(finalTranscript);
 				audioStopRecorded.play();
 			}
 		} else {
-			setResults('');
-			toggleMicrophoneAnimation();
+			addMicrophoneAnimation();
+			setSearchInput('');
 			audioStartRecording.play();
 		}
-	}, [isRecording]);
+
+		setFirstRender(false);
+	}, [listening]);
 
 	return (
 		<div className="h-12 w-[300px] max-w-full px-4 rounded-md text-white bg-white/10 flex items-center justify-between">
 			<input
 				className="w-full h-12 bg-transparent placeholder:text-white/50 !outline-none"
 				type="text"
-				placeholder={interimResult ? interimResult : 'Tìm kiếm'}
-				onChange={(e) => setResults(e.target.value)}
-				value={
-					typeof results != 'object'
-						? results
-						: results[0]
-						? results[0].transcript
-						: ''
+				placeholder={
+					listening
+						? transcript
+							? transcript
+							: 'Tìm kiếm'
+						: 'Tìm kiếm'
 				}
+				onChange={(e) => setSearchInput(e.target.value)}
+				value={searchInput}
 			/>
 			<div
 				ref={microphone}
 				className="mx-2 text-white/50 relative flex justify-center items-center"
 			>
-				<button
-					onClick={isRecording ? stopSpeechToText : startSpeechToText}
-				>
+				<button onClick={listening ? stopListening : startListening}>
 					<FontAwesomeIcon icon={faMicrophone} />
 				</button>
 				<span

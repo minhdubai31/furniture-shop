@@ -5,7 +5,7 @@ import Tippy from '@tippyjs/react';
 import useAuth from '../../../hooks/useAuth';
 
 function User() {
-	const { auth, setAuth } = useAuth();
+	const { auth } = useAuth();
 
 	return (
 		<div className="flex items-center gap-5">
@@ -39,9 +39,8 @@ function User() {
 						/>
 						<Tippy
 							className="!text-base"
-							placement="bottom-start"
+							placement="bottom"
 							maxWidth="none"
-							offset={[0, 10]}
 							animation="shift-away"
 							arrow={false}
 							theme="light"

@@ -1,5 +1,3 @@
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
 import { ReactComponent as TRex } from '../../assets/t_rex.svg';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';

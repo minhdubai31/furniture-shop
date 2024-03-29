@@ -14,6 +14,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("api/brand")
 @RequiredArgsConstructor
+@CrossOrigin
 public class BrandController {
     private final BrandService brandService;
 

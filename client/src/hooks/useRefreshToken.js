@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 import useAuth from './useAuth';
 
@@ -6,7 +5,6 @@ const REFRESH_TOKEN_URL = '/api/auth/refreshtoken';
 
 const useRefreshToken = () => {
 	const { setAuth } = useAuth();
-	const navigate = useNavigate();
 
 	const refreshToken = async () => {
 		try {
@@ -21,14 +19,17 @@ const useRefreshToken = () => {
 			const newAccessToken = response?.data?.token;
 			const role = response?.data?.role;
 			const name = response?.data?.name;
+			const username = response?.data?.username;
 
-			setAuth({ name, role });
+			setAuth({ name, role, username });
 
 			localStorage.setItem('essayAccessToken', newAccessToken);
-			console.log('refresh');
 		} catch (error) {
 			console.log(error);
-			navigate('/logout');
+
+			setAuth(null);
+			localStorage.removeItem('essayAccessToken');
+			localStorage.removeItem('essayRefreshToken');
 		}
 	};
 	return refreshToken;

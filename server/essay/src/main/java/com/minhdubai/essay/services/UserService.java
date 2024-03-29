@@ -15,6 +15,10 @@ public interface UserService {
 
     Optional<UserDto> findByUsername(String username);
 
+    UserDto update(Integer id, UserDto updateFields);
+
+    void destroy(Integer id);
+
     UserDto addAddress(Integer id, AddressDto newAddress);
     UserDto deleteAddress(Integer id, Integer addressId);
 
@@ -23,4 +27,5 @@ public interface UserService {
     void addToFavorites(Integer id, Integer productId);
 
     void removeFromFavorites(Integer id, Integer productId);
+    Optional<UserDto> loggedInUser();
 }

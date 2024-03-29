@@ -53,6 +53,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .refresh_token(refreshToken)
                 .role(newUser.getRole())
                 .name(newUser.getName())
+                .username(newUser.getUsername())
                 .build();
     }
 
@@ -77,6 +78,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .refresh_token(refreshToken)
                 .role(user.getRole())
                 .name(user.getName())
+                .username(user.getUsername())
                 .build();
     }
 
@@ -104,6 +106,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         .refresh_token(refreshToken)
                         .role(user.getRole())
                         .name(user.getName())
+                        .username(user.getUsername())
                         .build();
 
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);

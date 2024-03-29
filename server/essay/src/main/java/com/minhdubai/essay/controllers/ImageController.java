@@ -12,8 +12,9 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/resources/images")
+@RequestMapping("/api/image")
 @RequiredArgsConstructor
+@CrossOrigin
 public class ImageController {
 
     private final ImageService imageService;

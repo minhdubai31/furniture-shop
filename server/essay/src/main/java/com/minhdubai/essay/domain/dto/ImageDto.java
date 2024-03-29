@@ -1,8 +1,6 @@
 package com.minhdubai.essay.domain.dto;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,15 +24,16 @@ public class ImageDto {
     private String name;
     private String path;
 
-    @JsonIgnoreProperties({"gallery", "image"})
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<ProductDto> products = new ArrayList<>();
 
-    @JsonIgnoreProperties({"gallery", "image"})
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<ProductDto> productImages = new ArrayList<>();
 
-    @JsonIgnoreProperties("logo")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private BrandDto brand;
 
+    @JsonFormat(pattern = "HH:mm:ss dd-MM-yyyy", timezone = "Asia/Bangkok")
     private Instant createdAt;
     private Instant lastUpdatedAt;
 }

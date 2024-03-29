@@ -30,45 +30,7 @@ function Home() {
 
 		fetchProducts();
 	}, []);
-
-	// const products = [
-	// 	{
-	// 		name: 'San pham sieu cap tot',
-	// 		image: 'https://res.cloudinary.com/dkqtxtobb/image/upload/f_auto,q_auto:best,w_768/product-assets/441332/room-and-board/sofas/sofa-beds/room-and-board-deco-convertible-sleeper-sofa.jpeg',
-	// 		price: 1000,
-	// 	},
-	// 	{
-	// 		name: 'San pham 2',
-	// 		image: 'https://www.realsimple.com/thmb/kRRAaK6XhZIqL_GFIxfZzHTHx7o=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/furniture-styles-GettyImages-1467984982-512fed4077b646eabbc187619554d517.jpg',
-	// 		price: 2000,
-	// 	},
-	// 	{
-	// 		name: 'San pham sieu cap tot 2',
-	// 		image: 'https://res.cloudinary.com/dkqtxtobb/image/upload/f_auto,q_auto:best,w_768/product-assets/441332/room-and-board/sofas/sofa-beds/room-and-board-deco-convertible-sleeper-sofa.jpeg',
-	// 		price: 1000,
-	// 	},
-	// 	{
-	// 		name: 'San pham sieu cap tot 3',
-	// 		image: 'https://res.cloudinary.com/dkqtxtobb/image/upload/f_auto,q_auto:best,w_768/product-assets/441332/room-and-board/sofas/sofa-beds/room-and-board-deco-convertible-sleeper-sofa.jpeg',
-	// 		price: 1000,
-	// 	},
-	// 	{
-	// 		name: 'San pham sieu cap tot 4',
-	// 		image: 'https://res.cloudinary.com/dkqtxtobb/image/upload/f_auto,q_auto:best,w_768/product-assets/441332/room-and-board/sofas/sofa-beds/room-and-board-deco-convertible-sleeper-sofa.jpeg',
-	// 		price: 1000,
-	// 	},
-	// 	{
-	// 		name: 'San pham sieu cap tot 5',
-	// 		image: 'https://res.cloudinary.com/dkqtxtobb/image/upload/f_auto,q_auto:best,w_768/product-assets/441332/room-and-board/sofas/sofa-beds/room-and-board-deco-convertible-sleeper-sofa.jpeg',
-	// 		price: 1000,
-	// 	},
-	// 	{
-	// 		name: 'San pham sieu cap tot 6',
-	// 		image: 'https://res.cloudinary.com/dkqtxtobb/image/upload/f_auto,q_auto:best,w_768/product-assets/441332/room-and-board/sofas/sofa-beds/room-and-board-deco-convertible-sleeper-sofa.jpeg',
-	// 		price: 1000,
-	// 	},
-	// ];
-
+	
 	return (
 		<div>
 			<Header />

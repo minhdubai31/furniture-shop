@@ -50,7 +50,7 @@ public class UserEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<AddressEntity> addresses = new ArrayList<>();
 
     @OneToMany(mappedBy = "manager", fetch = FetchType.EAGER)
@@ -93,9 +93,4 @@ public class UserEntity implements UserDetails {
         return true;
     }
 
-////    Delete all addresses belong to this user when delete it.
-//    @PreRemove
-//    public void deleteAllAddressesBelongTo() {
-//        addresses.forEach(address -> address.setUser(null));
-//    }
 }

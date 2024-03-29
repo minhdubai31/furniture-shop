@@ -97,12 +97,13 @@ function Login() {
 			const accessToken = response?.data?.token;
 			const refreshToken = response?.data?.refresh_token;
 			const role = response?.data?.role;
-			const nameUser = response?.data?.name;
+			const resName = response?.data?.name;
+			const resUsername = response?.data?.username;
 			
 			localStorage.setItem('essayAccessToken', accessToken);
 			localStorage.setItem('essayRefreshToken', refreshToken);
 
-			setAuth({ name: nameUser, role });
+			setAuth({ name: resName, role, username: resUsername });
 			navigate('/');
 		} catch (err) {
 			console.log(err);

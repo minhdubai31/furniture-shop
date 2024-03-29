@@ -8,6 +8,7 @@ import SignUp from './pages/SignUp';
 import NotFound from './pages/NotFound';
 import RequireAuth from './components/RequireAuth/RequireAuth';
 import Logout from './pages/Logout';
+import Admin from './pages/Admin';
 import useRefreshToken from './hooks/useRefreshToken';
 
 function App() {
@@ -26,9 +27,14 @@ function App() {
 				<Route path="/signup" element={<SignUp />} />
 				<Route path="/logout" element={<Logout />} />
 
-
 				{/* Need to login before can access */}
 				<Route element={<RequireAuth />}>{/* Add routes here */}</Route>
+
+				{/* Need to be ADMIN to access */}
+				<Route element={<RequireAuth allowedRole="ADMIN" />}>
+					{/* Add routes here */}
+					<Route path="/admin" element={<Admin />} />
+				</Route>
 
 				{/* Not found page */}
 				<Route path="*" element={<NotFound />} />
