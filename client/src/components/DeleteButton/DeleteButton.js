@@ -28,14 +28,20 @@ function DeleteButton({
 		<div>
 			{type === 'icon' ? (
 				<button
-					onClick={() => setShowModal(true)}
-					className="text-white bg-red-500 rounded w-7 h-7"
+					onClick={(e) => {
+						e.preventDefault();
+						setShowModal(true);
+					}}
+					className="text-white bg-red-500 hover:bg-red-600 duration-150 rounded w-7 h-7 flex items-center justify-center"
 				>
 					<FontAwesomeIcon icon={faTrash} />
 				</button>
 			) : (
 				<button
-					onClick={() => setShowModal(true)}
+					onClick={(e) => {
+						e.preventDefault();
+						setShowModal(true);
+					}}
 					className="border text-red-500 border-red-500 rounded p-1 px-3 hover:text-white hover:bg-red-500 duration-150"
 				>
 					Xóa
@@ -49,12 +55,13 @@ function DeleteButton({
 						ref={modal}
 						className="bg-white rounded-md p-5 shadow-2xl"
 					>
-						<p>{description}</p>
+						<p className='text-wrap max-w-lg'>{description}</p>
 						<div className="flex justify-center mt-5">
 							<div className="flex gap-2">
 								<button
-									className="p-1.5 px-4 rounded-md bg-red-500 hover:bg-red-600 duration-150 text-white"
-									onClick={() => {
+									className="p-1.5 px-4 border border-red-500 rounded-md bg-red-500 hover:bg-red-600 duration-150 text-white"
+									onClick={(e) => {
+										e.preventDefault();
 										deletefn(item.id);
 										setShowModal(false);
 									}}
@@ -62,8 +69,11 @@ function DeleteButton({
 									Xóa
 								</button>
 								<button
-									className="p-1.5 px-4 rounded-md bg-gray-200 hover:bg-gray-300 duration-150"
-									onClick={() => setShowModal(false)}
+									className="p-1.5 px-4 rounded-md border border-gray-300 bg-gray-200 hover:bg-gray-300 duration-150"
+									onClick={(e) => {
+										e.preventDefault();
+										setShowModal(false);
+									}}
 								>
 									Hủy
 								</button>

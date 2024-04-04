@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.minhdubai.essay.controllers.auth.AuthenticationRequest;
 import com.minhdubai.essay.controllers.auth.AuthenticationResponse;
 import com.minhdubai.essay.controllers.auth.RegisterRequest;
+import com.minhdubai.essay.domain.AuthProvider;
 import com.minhdubai.essay.domain.Role;
 import com.minhdubai.essay.domain.dto.UserDto;
 import com.minhdubai.essay.domain.entities.UserEntity;
@@ -40,6 +41,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .username(request.getUsername())
                 .birthday(request.getBirthday())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .authProvider(AuthProvider.LOCAL)
                 .role(Role.USER)
                 .build();
 

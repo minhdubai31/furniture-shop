@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-
-import axios from '../../api/axios';
-import useAuth from '../../hooks/useAuth';
+import { Link } from 'react-router-dom';
 
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -11,15 +8,14 @@ import { ReactComponent as GoogleLogo } from '../../assets/logo/GoogleLogo.svg';
 import { ReactComponent as FacebookLogo } from '../../assets/logo/FacebookLogo.svg';
 import { ReactComponent as GithubLogo } from '../../assets/logo/GithubLogo.svg';
 
-const SIGNUP_URL = '/api/auth/register';
+import AuthService from '../../services/AuthService';
 
 function Login() {
 	useEffect(() => {
 		document.title = 'Đăng ký';
 	}, []);
 
-	const { setAuth } = useAuth();
-	const navigate = useNavigate();
+	const { register } = AuthService();
 
 	const [name, setName] = useState('');
 	const [username, setUsername] = useState('');
@@ -27,7 +23,9 @@ function Login() {
 	const [password, setPassword] = useState('');
 	const [birthday, setBirthday] = useState('');
 
-	const loginFields = [
+	const [errorMessage, setErrorMessage] = useState('');
+
+	const registerFields = [
 		{
 			id: 'name',
 			name: 'name',
@@ -74,39 +72,15 @@ function Login() {
 		},
 	];
 
-	const signupSubmitHandler = async (e) => {
+	const registerHandler = async (e) => {
 		e.preventDefault();
 
 		try {
-			const response = await axios.post(
-				SIGNUP_URL,
-				JSON.stringify({
-					name,
-					username,
-					email,
-					password,
-					birthday,
-				}),
-				{
-					headers: {
-						'Content-Type': 'application/json',
-					},
-				}
-			);
-
-			const accessToken = response?.data?.token;
-			const refreshToken = response?.data?.refresh_token;
-			const role = response?.data?.role;
-			const resName = response?.data?.name;
-			const resUsername = response?.data?.username;
-			
-			localStorage.setItem('essayAccessToken', accessToken);
-			localStorage.setItem('essayRefreshToken', refreshToken);
-
-			setAuth({ name: resName, role, username: resUsername });
-			navigate('/');
+			register(name, username, email, password, birthday);
 		} catch (err) {
 			console.log(err);
+			if (!err.response) setErrorMessage('Không thể kết nối với máy chủ');
+			else setErrorMessage(err.response?.data);
 		}
 	};
 
@@ -117,9 +91,21 @@ function Login() {
 				<div className="w-[500px] bg-white p-14 py-16 border rounded-md my-6 text-center">
 					<DecoratedHeading content="Đăng ký" />
 					<div className="mt-10 text-left">
-						<form method="post" onSubmit={signupSubmitHandler}>
-							{/* Login fields */}
-							{loginFields.map((field) => (
+						{/* Error message */}
+						<div className="mb-5">
+							<span
+								className={
+									errorMessage &&
+									'border rounded border-red-400 bg-red-50 text-red-500 p-1.5 px-2.5'
+								}
+							>
+								{errorMessage}
+							</span>
+						</div>
+
+						<form method="post" onSubmit={registerHandler}>
+							{/* Register fields */}
+							{registerFields.map((field) => (
 								<div key={field.id} className="mb-4">
 									<label
 										htmlFor={field.id}
@@ -154,27 +140,27 @@ function Login() {
 						<div className="text-center">
 							<p className="my-6 text-xs text-gray-400">hoặc</p>
 							<div className="text-3xl flex gap-5 justify-center">
-								<Link to={''}>
+							<a href={'http://localhost:8080/oauth2/authorization/google'}>
 									<GoogleLogo
 										width={44}
 										height={44}
 										className="hover:bg-gray-100 p-1.5 rounded-full duration-200"
 									/>
-								</Link>
-								<Link to={''}>
+								</a>
+								<a href={'http://localhost:8080/oauth2/authorization/facebook'}>
 									<FacebookLogo
 										width={44}
 										height={44}
 										className="hover:bg-gray-100 p-1.5 rounded-full duration-200"
 									/>
-								</Link>
-								<Link to={''}>
+								</a>
+								<a href={'http://localhost:8080/oauth2/authorization/github'}>
 									<GithubLogo
 										width={44}
 										height={44}
 										className="hover:bg-gray-100 p-1.5 rounded-full duration-200"
 									/>
-								</Link>
+								</a>
 							</div>
 						</div>
 					</div>

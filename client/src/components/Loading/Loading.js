@@ -1,6 +1,11 @@
-function Loading({className}) {
+function Loading({ className }) {
 	return (
-		<div className={className} role="status">
+		<div
+			className={
+				'w-full h-full flex justify-center items-center ' + className
+			}
+			role="status"
+		>
 			<svg
 				aria-hidden="true"
 				className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"

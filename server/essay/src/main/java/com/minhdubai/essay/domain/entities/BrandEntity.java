@@ -27,6 +27,7 @@ public class BrandEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     private ImageEntity logo;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @OneToMany(mappedBy = "brand", fetch = FetchType.EAGER)

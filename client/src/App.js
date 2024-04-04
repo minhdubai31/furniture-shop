@@ -9,6 +9,7 @@ import NotFound from './pages/NotFound';
 import RequireAuth from './components/RequireAuth/RequireAuth';
 import Logout from './pages/Logout';
 import Admin from './pages/Admin';
+import OAuth2Redirect from './pages/OAuth2Redirect';
 import useRefreshToken from './hooks/useRefreshToken';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
 				<Route path="/login" element={<Login />} />
 				<Route path="/signup" element={<SignUp />} />
 				<Route path="/logout" element={<Logout />} />
+				<Route path="/oauth2" element={<OAuth2Redirect />} />
 
 				{/* Need to login before can access */}
 				<Route element={<RequireAuth />}>{/* Add routes here */}</Route>

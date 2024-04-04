@@ -1,20 +1,26 @@
 import { useEffect, useState } from 'react';
 
 import DataTable from '../../../../components/DataTable';
-import useAxios from '../../../../hooks/useAxios';
 import DeleteButton from '../../../../components/DeleteButton';
+import EditButton from '../../../../components/EditButton';
+import BrandForm from '../../../../components/BrandForm';
 
-const BRAND_API_URL = '/api/brand/';
+import BrandService from '../../../../services/BrandService';
 
 function BrandPanel() {
-	const [brandsData, setBrandsData] = useState([]);
-	const axios = useAxios();
+	useEffect(() => {
+		document.title = 'Quản lý thương hiệu';
+	});
 
-	const fetchBrandsData = async () => {
+	const { getBrands, createBrand, deleteBrand, updateBrand } = BrandService();
+
+	const [brandsData, setBrandsData] = useState([]);
+	const [showModal, setShowModal] = useState(false);
+	const [editingBrand, setEditingBrand] = useState();
+
+	const fetchBrands = async () => {
 		try {
-			const response = await axios.get(BRAND_API_URL);
-			setBrandsData(response.data);
-			console.log(response.data);
+			setBrandsData(await getBrands());
 		} catch (error) {
 			console.log(error);
 		}
@@ -22,24 +28,33 @@ function BrandPanel() {
 
 	const deleteBrandHandler = async (id) => {
 		try {
-			await axios.delete(BRAND_API_URL + id);
-			fetchBrandsData();
+			await deleteBrand(id);
+			fetchBrands();
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
-	const createBrandHandler = async () => {
+	const createBrandHandler = async (name, logoImageId, description) => {
 		try {
-			await axios.post(BRAND_API_URL, JSON.stringify({}))
-			fetchBrandsData();
+			await createBrand(name, logoImageId, description);
+			fetchBrands();
 		} catch (error) {
 			console.log(error);
 		}
-	}
+	};
+
+	const updateBrandHandler = async (id, name, logoImageId, description) => {
+		try {
+			await updateBrand(id, name, logoImageId, description);
+			fetchBrands();
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	useEffect(() => {
-		fetchBrandsData();
+		fetchBrands();
 	}, []);
 
 	const tableColums = [
@@ -52,31 +67,60 @@ function BrandPanel() {
 			label: 'Logo',
 			renderCell: (item) => (
 				<img
-					src={process.env.REACT_APP_BACKEND_SERVER + item.logo?.path}
+					className="max-h-40 rounded-sm border"
+					src={
+						process.env.REACT_APP_BACKEND_SERVER +
+						item.logo?.thumbnailPath
+					}
 				/>
 			),
 			resize: true,
 		},
 		{
 			label: 'Thông tin',
-			renderCell: (item) => item?.description,
+			renderCell: (item) => (
+				<p className="text-wrap">{item?.description}</p>
+			),
 			resize: true,
 		},
 		{
 			renderCell: (item) => (
-				<DeleteButton item={item} deletefn={deleteBrandHandler} />
+				<div className="flex gap-2">
+					<EditButton
+						showModalFn={setShowModal}
+						item={item}
+						setEditingFn={setEditingBrand}
+					/>
+					<DeleteButton
+						item={item}
+						deletefn={deleteBrandHandler}
+						description="Việc xóa thương hiệu sẽ chuyển các sản phẩm thuộc thương hiệu này sang sản phẩm không có thương hiệu. Bạn chắc chắn muốn tiếp tục?"
+					/>
+				</div>
 			),
 		},
 	];
 
 	return (
-		<DataTable
-			tableTitle="Danh sách thương hiệu"
-			tableData={brandsData}
-			tableColums={tableColums}
-			searchBy={{ text: 'tên thương hiệu', field: 'name' }}
-			templateCol={`minmax(0, 1fr) minmax(0, 150px) auto auto`}
-		/>
+		<>
+			<BrandForm
+				state={[showModal, setShowModal]}
+				createFn={createBrandHandler}
+				updateFn={updateBrandHandler}
+				updateBrand={editingBrand}
+			/>
+			<DataTable
+				tableTitle="Danh sách thương hiệu"
+				tableData={brandsData}
+				tableColums={tableColums}
+				searchBy={{ text: 'tên thương hiệu', field: 'name' }}
+				templateCol={`auto minmax(0, 150px) minmax(0, 1fr) auto`}
+				createFn={() => {
+					setShowModal(true);
+					setEditingBrand();
+				}}
+			/>
+		</>
 	);
 }
 

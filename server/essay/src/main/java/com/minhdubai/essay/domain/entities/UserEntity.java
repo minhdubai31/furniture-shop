@@ -1,5 +1,6 @@
 package com.minhdubai.essay.domain.entities;
 
+import com.minhdubai.essay.domain.AuthProvider;
 import com.minhdubai.essay.domain.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -40,6 +41,9 @@ public class UserEntity implements UserDetails {
     private String email;
     private String password;
     private String phoneNumber;
+
+    @Enumerated(EnumType.STRING)
+    private AuthProvider authProvider;
 
     @CreationTimestamp
     private Instant createdAt;

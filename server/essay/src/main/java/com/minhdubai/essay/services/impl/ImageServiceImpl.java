@@ -10,12 +10,15 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.name.Rename;
+import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,11 +59,26 @@ public class ImageServiceImpl implements ImageService {
                 .size(300, 300)
                 .toFiles(Rename.PREFIX_DOT_THUMBNAIL);
 
+        // Convert file size to readable
+        double size = FileUtils.sizeOf(targetFile);
+        String sizeWithUnit = Double.toString(size) + " bytes";
+        if (size >= 1024) {
+            size = size / 1024.0;
+            sizeWithUnit = new DecimalFormat("#.0#").format(size) + " KB";
+        }
+        if (size >= 1024) {
+            size = size / 1024.0;
+            sizeWithUnit = new DecimalFormat("#.0#").format(size) + " MB";
+        }
+
         // Create information to database
         ImageDto imageDto = ImageDto.builder()
                 .name(originalFileName)
                 .path(urlPath + targetFile.getName())
                 .thumbnailPath(urlPath + "thumbnail." + targetFile.getName())
+                .width(ImageIO.read(targetFile).getWidth())
+                .height(ImageIO.read(targetFile).getHeight())
+                .size(sizeWithUnit)
                 .build();
 
         ImageEntity savedImage = imageRepository.save(imageMapper.mapFrom(imageDto));

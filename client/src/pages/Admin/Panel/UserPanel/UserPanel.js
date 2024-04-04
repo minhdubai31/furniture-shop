@@ -1,48 +1,51 @@
 import { useEffect, useState } from 'react';
 
-import useAxios from '../../../../hooks/useAxios';
 import useAuth from '../../../../hooks/useAuth';
 
 import DataTable from '../../../../components/DataTable';
 import DeleteButton from '../../../../components/DeleteButton';
 import ChangeUserRoleButton from '../../../../components/ChangeUserRoleButton';
 
-const USERS_API_URL = '/api/user/';
+import UserService from '../../../../services/UserService';
 
 function UserPanel() {
-	const [usersdata, setUsersdata] = useState([]);
-	const axios = useAxios();
+	useEffect(() => {
+		document.title = 'Quản lý người dùng';
+	});
+
+	const { getUsers, deleteUser, changeUserRole  } = UserService();
+
+	const [users, setUsers] = useState([]);
 	const { auth } = useAuth();
 
-	const fetchUsersdata = async () => {
+	const fetchUsers = async () => {
 		try {
-			const response = await axios.get(USERS_API_URL);
-			setUsersdata(response.data);
+			setUsers(await getUsers());
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
-	const deleteUser = async (userId) => {
+	const deleteUserHandler = async (id) => {
 		try {
-			await axios.delete(USERS_API_URL + userId);
-			fetchUsersdata();
+			await deleteUser(id);
+			fetchUsers();
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
-	const changeUserRole = async (userId, role) => {
+	const changeUserRoleHandler = async (id, role) => {
 		try {
-			await axios.patch(USERS_API_URL + userId, { role });
-			fetchUsersdata();
+			await changeUserRole(id, role)
+			fetchUsers();
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
 	useEffect(() => {
-		fetchUsersdata();
+		fetchUsers();
 	}, []);
 
 	const tableColums = [
@@ -61,22 +64,22 @@ function UserPanel() {
 		{
 			label: 'Quyền',
 			renderCell: (item) => (
-				<>
+				<div className='flex justify-between'>
 					{item.role}
 					{auth.username != item.username && (
 						<ChangeUserRoleButton
 							item={item}
-							changeRolefn={changeUserRole}
+							changeRolefn={changeUserRoleHandler}
 						/>
 					)}
-				</>
+				</div>
 			),
 			resize: true,
 		},
 		{
 			renderCell: (item) =>
 				auth?.username != item.username ? (
-					<DeleteButton item={item} deletefn={deleteUser} />
+					<DeleteButton item={item} deletefn={deleteUserHandler} />
 				) : (
 					<span className="text-blue-500 text-xs">Bạn</span>
 				),
@@ -86,7 +89,7 @@ function UserPanel() {
 	return (
 		<DataTable
 			tableTitle="Danh sách người dùng"
-			tableData={usersdata}
+			tableData={users}
 			tableColums={tableColums}
 			searchBy={{ text: 'tên', field: 'name' }}
 			templateCol={`repeat(${tableColums.length}, auto)`}

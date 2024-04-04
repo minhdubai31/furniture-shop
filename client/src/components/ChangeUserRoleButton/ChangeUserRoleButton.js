@@ -24,7 +24,7 @@ function ChangeUserRoleButton({ item, changeRolefn }) {
 		<>
 			<button
 				onClick={() => setShowModal(true)}
-				className="text-white bg-blue-500 rounded h-7 text-xs ms-4 px-2"
+				className="text-white bg-blue-500 rounded h-7 w-20 text-xs ms-4 px-2"
 			>
 				<FontAwesomeIcon icon={faArrowRight} />
 				<span className="ms-2">

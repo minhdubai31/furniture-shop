@@ -5,9 +5,6 @@ import { MantineProvider } from '@mantine/core';
 function Admin() {
 	const [activeTab, setActiveTab] = useState();
 
-	useEffect(() => {
-		document.title = 'Admin';
-	});
 	return (
 		<div className="bg-gray-100 min-h-[100vh] p-4">
 			<div className="h-svh w-44 fixed left-0 top-0">

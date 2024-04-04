@@ -1,6 +1,9 @@
 package com.minhdubai.essay.domain.dto;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +27,8 @@ public class ImageDto {
     private String name;
     private String path;
     private String thumbnailPath;
+    private Integer width, height;
+    private String size;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<ProductDto> products = new ArrayList<>();

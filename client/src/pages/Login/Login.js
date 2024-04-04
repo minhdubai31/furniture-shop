@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-
-import axios from '../../api/axios';
-import useAuth from '../../hooks/useAuth';
+import { Link } from 'react-router-dom';
 
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -11,21 +8,18 @@ import { ReactComponent as GoogleLogo } from '../../assets/logo/GoogleLogo.svg';
 import { ReactComponent as FacebookLogo } from '../../assets/logo/FacebookLogo.svg';
 import { ReactComponent as GithubLogo } from '../../assets/logo/GithubLogo.svg';
 
-const LOGIN_URL = '/api/auth/authenticate';
+import AuthService from '../../services/AuthService';
 
 function Login() {
 	useEffect(() => {
 		document.title = 'Đăng nhập';
 	}, []);
 
-	const { setAuth } = useAuth();
+	const { login } = AuthService();
 
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
-
 	const [errorMessage, setErrorMessage] = useState('');
-
-	const navigate = useNavigate();
 
 	const loginFields = [
 		{
@@ -48,31 +42,11 @@ function Login() {
 		},
 	];
 
-	const loginSubmitHandler = async (e) => {
+	const loginHandler = async (e) => {
 		e.preventDefault();
 
 		try {
-			const response = await axios.post(
-				LOGIN_URL,
-				JSON.stringify({ username: username, password: password }),
-				{
-					headers: {
-						'Content-Type': 'application/json',
-					},
-				}
-			);
-
-			const accessToken = response?.data?.token;
-			const refreshToken = response?.data?.refresh_token;
-			const role = response?.data?.role;
-			const name = response?.data?.name;
-			const resUsername = response?.data?.username;
-
-			localStorage.setItem('essayAccessToken', accessToken);
-			localStorage.setItem('essayRefreshToken', refreshToken);
-
-			setAuth({ name, role, username: resUsername });
-			navigate('/');
+			await login(username, password);
 		} catch (err) {
 			console.log(err);
 			if (!err.response) setErrorMessage('Không thể kết nối với máy chủ');
@@ -99,7 +73,7 @@ function Login() {
 							</span>
 						</div>
 
-						<form method="post" onSubmit={loginSubmitHandler}>
+						<form method="post" onSubmit={loginHandler}>
 							{/* Login fields */}
 							{loginFields.map((field) => (
 								<div key={field.id} className="mb-4">
@@ -141,27 +115,27 @@ function Login() {
 						<div className="text-center">
 							<p className="my-6 text-xs text-gray-400">hoặc</p>
 							<div className="text-3xl flex gap-5 justify-center">
-								<Link to={''}>
+								<a href={'http://localhost:8080/oauth2/authorization/google'}>
 									<GoogleLogo
 										width={44}
 										height={44}
 										className="hover:bg-gray-100 p-1.5 rounded-full duration-200"
 									/>
-								</Link>
-								<Link to={''}>
+								</a>
+								<a href={'http://localhost:8080/oauth2/authorization/facebook'}>
 									<FacebookLogo
 										width={44}
 										height={44}
 										className="hover:bg-gray-100 p-1.5 rounded-full duration-200"
 									/>
-								</Link>
-								<Link to={''}>
+								</a>
+								<a href={'http://localhost:8080/oauth2/authorization/github'}>
 									<GithubLogo
 										width={44}
 										height={44}
 										className="hover:bg-gray-100 p-1.5 rounded-full duration-200"
 									/>
-								</Link>
+								</a>
 							</div>
 						</div>
 					</div>

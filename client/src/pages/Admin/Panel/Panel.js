@@ -4,12 +4,14 @@ import Logo from '../../../components/Logo';
 import UserPanel from './UserPanel';
 import BrandPanel from './BrandPanel';
 import MediaPanel from './MediaPanel';
+import CategoryPanel from './CategoryPanel';
+import ProductPanel from './ProductPanel';
 
 const panelChildren = [
 	{ label: 'Người dùng', body: <UserPanel /> },
 	{ label: 'Thương hiệu', body: <BrandPanel /> },
-	{ label: 'Danh mục', body: '' },
-	{ label: 'Sản phẩm', body: '' },
+	{ label: 'Danh mục', body: <CategoryPanel /> },
+	{ label: 'Sản phẩm', body: <ProductPanel /> },
 	{ label: 'Kho', body: '' },
 	{ label: 'Đơn hàng', body: '' },
 	{ label: 'Media', body: <MediaPanel /> },
@@ -17,7 +19,7 @@ const panelChildren = [
 
 function Panel({ setActiveTab }) {
 	const [tab, setTab] = useState(panelChildren[0]);
-	
+
 	useEffect(() => {
 		setActiveTab(tab.body);
 	}, []);
