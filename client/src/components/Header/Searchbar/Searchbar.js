@@ -12,6 +12,7 @@ import SpeechRecognition, {
 
 import soundStartRecording from './audio/start_recording.mp3';
 import soundStopRecorded from './audio/stop_recorded.mp3';
+import { useNavigate } from 'react-router-dom';
 
 function SearchBar() {
 	// Use web speech api
@@ -26,13 +27,19 @@ function SearchBar() {
 	const [searchInput, setSearchInput] = useState('');
 	const [firstRender, setFirstRender] = useState(true);
 
+	const navigate = useNavigate();
+
 	const microphone = useRef();
 	const behindMicrophone = useRef();
 	const audioStartRecording = new Audio(soundStartRecording);
 	const audioStopRecorded = new Audio(soundStopRecorded);
 
-	useEffect(() => {
+	const searchHandler = (searchContent) => {
+		if (searchContent.length > 0) navigate('/search?text=' + searchContent);
+		setSearchInput('');
+	};
 
+	useEffect(() => {
 		const addMicrophoneAnimation = () => {
 			microphone.current.classList.add('!text-white');
 			behindMicrophone.current.classList.add('bg-white/25');
@@ -50,6 +57,7 @@ function SearchBar() {
 			if (!firstRender) {
 				setSearchInput(finalTranscript);
 				audioStopRecorded.play();
+				searchHandler(finalTranscript);
 			}
 		} else {
 			addMicrophoneAnimation();
@@ -73,11 +81,14 @@ function SearchBar() {
 						: 'Tìm kiếm'
 				}
 				onChange={(e) => setSearchInput(e.target.value)}
+				onKeyDown={(e) => {
+					if (e.key == 'Enter') searchHandler(searchInput);
+				}}
 				value={searchInput}
 			/>
 			<div
 				ref={microphone}
-				className="mx-2 text-white/50 relative flex justify-center items-center"
+				className="mx-2 text-white/50 cursor-pointer hover:text-white relative flex justify-center items-center"
 			>
 				<button onClick={listening ? stopListening : startListening}>
 					<FontAwesomeIcon icon={faMicrophone} />
@@ -87,7 +98,10 @@ function SearchBar() {
 					className="absolute inline-flex -z-10 h-5 w-5 rounded-full bg-transparent"
 				></span>
 			</div>
-			<div className="ms-2 text-white/50">
+			<div
+				className="ms-2 text-white/50 cursor-pointer hover:text-white"
+				onClick={(e) => searchHandler(searchInput)}
+			>
 				<FontAwesomeIcon icon={faMagnifyingGlass} />
 			</div>
 		</div>

@@ -10,7 +10,7 @@ function Logo() {
 			)}
 		>
 			<Link to="/">
-				<img
+				<img loading="lazy"
 					className="h-full scale-150"
 					src="https://t4.ftcdn.net/jpg/04/06/98/77/360_F_406987733_1e07OKnGxudkdq1xMqi1jIqZEzdZkceb.jpg"
 				/>

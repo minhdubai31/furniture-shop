@@ -66,7 +66,7 @@ function BrandPanel() {
 		{
 			label: 'Logo',
 			renderCell: (item) => (
-				<img
+				<img loading="lazy"
 					className="max-h-40 rounded-sm border"
 					src={
 						process.env.REACT_APP_BACKEND_SERVER +

@@ -24,15 +24,16 @@ function AuthService() {
 		const refreshToken = response?.data?.refresh_token;
 		const role = response?.data?.role;
 		const name = response?.data?.name;
+		const id = response?.data?.id;
 
 		localStorage.setItem('essayAccessToken', accessToken);
 		localStorage.setItem('essayRefreshToken', refreshToken);
 
-		setAuth({ name, username, role });
+		setAuth({ id, name, username, role });
 		navigate('/');
 	};
 
-	const register = async (name, username, email, password, birthday) => {
+	const register = async (name, username, email, password) => {
 		const response = await axios.post(
 			SIGNUP_URL,
 			JSON.stringify({
@@ -40,18 +41,18 @@ function AuthService() {
 				username,
 				email,
 				password,
-				birthday,
 			})
 		);
 
 		const accessToken = response?.data?.token;
 		const refreshToken = response?.data?.refresh_token;
 		const role = response?.data?.role;
+		const id = response?.data?.id;
 
 		localStorage.setItem('essayAccessToken', accessToken);
 		localStorage.setItem('essayRefreshToken', refreshToken);
 
-		setAuth({ name, username, role });
+		setAuth({ id, name, username, role });
 		navigate('/');
 	};
 

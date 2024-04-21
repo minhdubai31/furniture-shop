@@ -25,7 +25,7 @@ public class AddressEntity {
     private String commune;
     private String addressDetail;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private UserEntity user;
 
     @CreationTimestamp

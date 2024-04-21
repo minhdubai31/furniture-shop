@@ -17,15 +17,21 @@
     "@tippyjs/react": "^4.2.6",
     "axios": "^1.6.8",
     "classnames": "^2.5.1",
+    "date-fns": "^3.6.0",
+    "jsog-typescript": "^1.0.0-1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-speech-to-text": "^0.8.0",
+    "react-nl2br": "^1.0.4",
+    "react-photo-album": "^2.3.1",
     "react-router-dom": "^6.21.3",
     "react-scripts": "5.0.1",
     "react-speech-recognition": "^3.10.0",
     "sass": "^1.70.0",
     "tippy.js": "^6.3.7",
-    "web-vitals": "^2.1.0"
+    "use-debounce": "^10.0.0",
+    "web-vitals": "^2.1.0",
+    "yet-another-react-lightbox": "^3.17.3"
   },
   "scripts": {
     "start": "react-scripts start",

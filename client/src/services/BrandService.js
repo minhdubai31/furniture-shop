@@ -1,21 +1,25 @@
 import useAxios from '../hooks/useAxios';
+import axios from '../api/publicAxios';
+import { JsogService } from 'jsog-typescript';
+
 
 const BRAND_API_URL = '/api/brand/';
 
 function BrandService() {
-	const axios = useAxios();
+	const loggedInAxios = useAxios();
+	const JSOG = new JsogService();
 
 	const getBrands = async () => {
 		const response = await axios.get(BRAND_API_URL);
-		return response.data;
+		return JSOG.deserialize(response.data);
 	};
 
 	const deleteBrand = async (id) => {
-		await axios.delete(BRAND_API_URL + id);
+		await loggedInAxios.delete(BRAND_API_URL + id);
 	};
 
 	const createBrand = async (name, logoImageId, description) => {
-		await axios.post(
+		await loggedInAxios.post(
 			BRAND_API_URL,
 			JSON.stringify({
 				brand: { name, description },
@@ -25,7 +29,7 @@ function BrandService() {
 	};
 
 	const updateBrand = async (id, name, logoImageId, description) => {
-		await axios.patch(
+		await loggedInAxios.patch(
 			BRAND_API_URL + id,
 			JSON.stringify({
 				brand: { name, description },

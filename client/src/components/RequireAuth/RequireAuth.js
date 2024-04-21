@@ -12,7 +12,7 @@ const RequireAuth = ({ allowedRole }) => {
 		) : (
 			<NoPermissionPage />
 		)
-	) : auth?.name ? (
+	) : auth ? (
 		<Outlet />
 	) : (
 		<Navigate to="/login" state={{ from: location }} replace />

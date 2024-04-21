@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,10 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id"
-)
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class ProductDto {
 
     private Integer id;
@@ -35,7 +33,7 @@ public class ProductDto {
 
     private Integer price;
     private Integer salePrice;
-    private Integer remainingAmount = 0;
+    private Integer remainingAmount = Integer.MAX_VALUE;
 
     @JsonIgnoreProperties({"products", "productImages"})
     private ImageDto image;

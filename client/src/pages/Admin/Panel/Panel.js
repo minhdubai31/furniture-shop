@@ -6,14 +6,14 @@ import BrandPanel from './BrandPanel';
 import MediaPanel from './MediaPanel';
 import CategoryPanel from './CategoryPanel';
 import ProductPanel from './ProductPanel';
+import OrderPanel from './OrderPanel';
 
 const panelChildren = [
 	{ label: 'Người dùng', body: <UserPanel /> },
 	{ label: 'Thương hiệu', body: <BrandPanel /> },
 	{ label: 'Danh mục', body: <CategoryPanel /> },
 	{ label: 'Sản phẩm', body: <ProductPanel /> },
-	{ label: 'Kho', body: '' },
-	{ label: 'Đơn hàng', body: '' },
+	{ label: 'Đơn hàng', body: <OrderPanel /> },
 	{ label: 'Media', body: <MediaPanel /> },
 ];
 

@@ -6,6 +6,7 @@ import com.minhdubai.essay.mappers.Mapper;
 import com.minhdubai.essay.repositories.*;
 import com.minhdubai.essay.services.ProductService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -124,10 +125,10 @@ public class ProductServiceImpl implements ProductService {
                 updateProduct.setWidth(newWidth);
             if(newWeight != null)
                 updateProduct.setWeight(newWeight);
-            if(newPrice != null)
-                updateProduct.setPrice(newPrice);
-            if(newSalePrice != null)
-                updateProduct.setSalePrice(newSalePrice);
+
+            updateProduct.setPrice(newPrice);
+            updateProduct.setSalePrice(newSalePrice);
+
             if(newRemainingAmount != null)
                 updateProduct.setRemainingAmount(newRemainingAmount);
         }
@@ -139,25 +140,28 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
+    @Transactional
     public void destroy(Integer id) {
         ProductEntity deleteProduct = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product with id = " + id + " not found"));
 
-        productRepository.delete(deleteProduct);
+        productRepository.customDeleteById(id);
     }
 
     @Override
-    public ProductDto addGallery(Integer id, List<Integer> imagesId) {
+    public ProductDto updateGallery(Integer id, List<Integer> imagesId) {
         ProductEntity updateProduct = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product with id = " + id + " not found"));
 
 
-        List<ImageEntity> newGallery = updateProduct.getGallery();
+        List<ImageEntity> productGallery = updateProduct.getGallery();
 
         List<ImageEntity> gallery = imageRepository.findAllById(imagesId);
-        newGallery.addAll(gallery);
+        productGallery.clear();
+        productGallery.addAll(gallery);
 
-        updateProduct.setGallery(newGallery);
+
+        updateProduct.setGallery(productGallery);
         ProductEntity updatedProduct = productRepository.save(updateProduct);
 
         return productMapper.mapTo(updatedProduct);
@@ -176,16 +180,19 @@ public class ProductServiceImpl implements ProductService {
                 .user(commentUser)
                 .product(commentProduct)
                 .content(content)
+                .replyCommentId(replyId)
                 .build();
+
+        commentRepository.save(newComment);
 
         if (replyId != null) {
             CommentEntity reply = commentRepository.findById(replyId)
                  .orElseThrow(() -> new EntityNotFoundException("Comment with id = " + replyId + " not found"));
 
-            newComment.setReply(reply);
+            reply.getReply().add(newComment);
+            commentRepository.save(reply);
         }
 
-        commentRepository.save(newComment);
         return this.findById(productId).orElseThrow(EntityNotFoundException::new);
     }
 }

@@ -6,6 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,8 +30,10 @@ public class CommentEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     private ProductEntity product;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    private CommentEntity reply;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<CommentEntity> reply = new ArrayList<>();
+
+    private Integer replyCommentId;
 
     @CreationTimestamp
     private Instant createdAt;

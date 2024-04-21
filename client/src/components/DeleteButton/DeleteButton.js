@@ -7,6 +7,8 @@ function DeleteButton({
 	item,
 	deletefn,
 	type = 'icon',
+	customClass,
+	text = 'Xóa'
 }) {
 	const [showModal, setShowModal] = useState(false);
 	const modal = useRef();
@@ -25,14 +27,14 @@ function DeleteButton({
 	}, []);
 
 	return (
-		<div>
+		<>
 			{type === 'icon' ? (
 				<button
 					onClick={(e) => {
 						e.preventDefault();
 						setShowModal(true);
 					}}
-					className="text-white bg-red-500 hover:bg-red-600 duration-150 rounded w-7 h-7 flex items-center justify-center"
+					className={customClass ?? "text-white bg-red-500 hover:bg-red-600 duration-150 rounded w-7 h-7 flex items-center justify-center"}
 				>
 					<FontAwesomeIcon icon={faTrash} />
 				</button>
@@ -42,9 +44,9 @@ function DeleteButton({
 						e.preventDefault();
 						setShowModal(true);
 					}}
-					className="border text-red-500 border-red-500 rounded p-1 px-3 hover:text-white hover:bg-red-500 duration-150"
+					className={customClass ?? "border text-red-500 border-red-500 rounded p-1 px-3 hover:text-white hover:bg-red-500 duration-150"}
 				>
-					Xóa
+					{text}
 				</button>
 			)}
 			{/* Confirm modal container */}
@@ -66,7 +68,7 @@ function DeleteButton({
 										setShowModal(false);
 									}}
 								>
-									Xóa
+									{text}
 								</button>
 								<button
 									className="p-1.5 px-4 rounded-md border border-gray-300 bg-gray-200 hover:bg-gray-300 duration-150"
@@ -82,7 +84,7 @@ function DeleteButton({
 					</div>
 				</div>
 			)}
-		</div>
+		</>
 	);
 }
 

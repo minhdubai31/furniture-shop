@@ -13,6 +13,7 @@ function TableContainer({
 	searchBy,
 	templateCol,
 	createFn,
+	orderTable = false,
 }) {
 	// Set table theme
 	const theme = useTheme([
@@ -42,7 +43,11 @@ function TableContainer({
 	// Search in table
 	data = {
 		nodes: data.nodes.filter((item) =>
-			item[searchBy.field]?.toLowerCase().includes(search.toLowerCase())
+			orderTable
+				? item.user?.name?.toLowerCase().includes(search.toLowerCase())
+				: item[searchBy.field]
+						?.toLowerCase()
+						.includes(search.toLowerCase())
 		),
 	};
 

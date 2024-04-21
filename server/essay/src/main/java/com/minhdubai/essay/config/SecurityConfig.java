@@ -50,19 +50,21 @@ public class SecurityConfig {
             .csrf((csrf) -> csrf
                 .ignoringRequestMatchers("/api/**")
             )
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests((authorize) -> authorize
-                    .requestMatchers("/api/auth/**", "/api/user/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/resources/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
-                    .requestMatchers(HttpMethod.PATCH, "/api/**").hasRole("ADMIN")
-                    .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/resources/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+                .requestMatchers("/api/product/*/comment", "/api/comment/**").authenticated()
+                .requestMatchers("/api/order/**", "/api/user/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/api/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
-            .sessionManagement(session -> session
+                .sessionManagement(session -> session
                     .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
             )
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .oauth2Login(oauth2 -> oauth2
                     .successHandler(customOAuth2SuccessHandler)
             )

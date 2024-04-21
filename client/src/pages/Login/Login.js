@@ -56,7 +56,6 @@ function Login() {
 
 	return (
 		<div>
-			<Header />
 			<div className="flex justify-center bg-gray-100">
 				<div className="w-[500px] bg-white p-14 py-16 border rounded-md my-6 text-center">
 					<DecoratedHeading content="Đăng nhập" />
@@ -141,7 +140,6 @@ function Login() {
 					</div>
 				</div>
 			</div>
-			<Footer />
 		</div>
 	);
 }

@@ -1,20 +1,31 @@
 import { useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 import Loading from '../Loading';
 import DeleteButton from '../DeleteButton';
 
 import ImageService from '../../services/ImageService';
 
-function Gallery({ isSelectable, setSelectedImage, state }) {
+function Gallery({
+	isSelectable,
+	setSelectedImage,
+	selectedImage,
+	state,
+	isMultiSelectable,
+	setIsMultiSelectable,
+	setSelectedImages,
+	selectedImages,
+}) {
 	const [imagesdata, setImagesdata] = useState([]);
 	const [selectingImage, setSelectingImage] = useState();
 	const [uploadingImage, setUploadingImage] = useState();
 	const [uploadProgress, setUploadProgress] = useState(0);
 
-
 	const defaultGalleryState = useState(false);
-	const [showGalleryModal, setShowGalleryModal] = state ?? defaultGalleryState;
+	const [showGalleryModal, setShowGalleryModal] =
+		state ?? defaultGalleryState;
 
 	const previewImage = useRef();
 	const modal = useRef();
@@ -47,7 +58,12 @@ function Gallery({ isSelectable, setSelectedImage, state }) {
 			fetchImages();
 		} catch (error) {
 			console.log(error);
+			alert('Ảnh đang được sử dụng, xóa không thành công.');
 		}
+	};
+
+	const removeItem = (arr, value) => {
+		return arr?.filter((item) => item.id !== value.id);
 	};
 
 	const [isObserving, setIsObserving] = useState(false);
@@ -78,11 +94,15 @@ function Gallery({ isSelectable, setSelectedImage, state }) {
 	};
 
 	useEffect(() => {
+		if (setSelectedImage != null) {
+			setSelectingImage(selectedImage ?? null);
+		}
 		fetchImages();
 
 		const handleClickOutside = (event) => {
 			if (modal.current && !modal.current.contains(event.target)) {
 				setShowGalleryModal(false);
+				setIsMultiSelectable != null && setIsMultiSelectable(false);
 			}
 		};
 
@@ -120,20 +140,36 @@ function Gallery({ isSelectable, setSelectedImage, state }) {
 								<h1 className="text-2xl font-bold upper mb-5">
 									Danh sách hình ảnh
 								</h1>
-								<label htmlFor="image-selector">
-									<div className="p-2 px-4 mb-4 inline-block rounded border border-zinc-500 hover:bg-zinc-600 cursor-pointer duration-150 text-black hover:text-white">
-										Upload
-									</div>
-								</label>
-								<input
-									hidden
-									id="image-selector"
-									onChange={(e) =>
-										uploadImageHandler(e.target.files[0])
-									}
-									type="file"
-									name="image"
-								/>
+								<div className="flex justify-between">
+									<label htmlFor="image-selector">
+										<div className="p-2 px-4 mb-4 inline-block rounded border border-zinc-500 hover:bg-zinc-600 cursor-pointer duration-150 text-black hover:text-white">
+											Upload
+										</div>
+									</label>
+									<input
+										hidden
+										id="image-selector"
+										onChange={(e) =>
+											uploadImageHandler(
+												e.target.files[0]
+											)
+										}
+										type="file"
+										name="image"
+									/>
+									{isMultiSelectable &&
+										selectedImages?.length > 0 && (
+											<div
+												className="p-2 px-4 mb-4 inline-block rounded border border-blue-500 hover:bg-blue-600 cursor-pointer duration-150 text-blue-600 hover:text-white"
+												onClick={(e) => {
+													setShowGalleryModal(false);
+													setIsMultiSelectable(false);
+												}}
+											>
+												Xong
+											</div>
+										)}
+								</div>
 								<div
 									className={cx(
 										selectingImage
@@ -158,7 +194,7 @@ function Gallery({ isSelectable, setSelectedImage, state }) {
 													></div>
 												</div>
 											</span>
-											<img
+											<img loading="lazy"
 												className="object-cover w-full h-full rounded border cursor-pointer"
 												src={uploadingImage}
 											/>
@@ -178,7 +214,7 @@ function Gallery({ isSelectable, setSelectedImage, state }) {
 											}
 										>
 											<Loading className="absolute top-0 left-0" />
-											<img
+											<img loading="lazy"
 												onLoad={imagesLoadingHandler}
 												className="object-cover w-full h-full rounded opacity-0 border cursor-pointer duration-150"
 												src={
@@ -187,13 +223,23 @@ function Gallery({ isSelectable, setSelectedImage, state }) {
 													image?.thumbnailPath
 												}
 											/>
-											{image == selectingImage && (
+											{image.id == selectingImage?.id && (
 												<div className="absolute w-full h-full rounded top-0 left-0 bg-gray-100/80 flex justify-center items-center z-10 text-xs text-white border border-zinc-300">
 													<span className="drop-shadow-md">
 														Đang chọn
 													</span>
 												</div>
 											)}
+											{isMultiSelectable &&
+												selectedImages?.filter(
+													(img) => img.id == image.id
+												).length > 0 && (
+													<div className="absolute w-5 h-5 z-10 rounded-full top-1.5 right-1.5 bg-blue-500 flex justify-center items-center text-white text-xs font-bold">
+														<FontAwesomeIcon
+															icon={faCheck}
+														/>
+													</div>
+												)}
 										</div>
 									))}
 								</div>
@@ -229,7 +275,7 @@ function Gallery({ isSelectable, setSelectedImage, state }) {
 											}
 										>
 											<Loading className="absolute top-0 left-0" />
-											<img
+											<img loading="lazy"
 												ref={previewImage}
 												onLoad={
 													imagePreviewOnLoadHandler
@@ -297,12 +343,39 @@ function Gallery({ isSelectable, setSelectedImage, state }) {
 									<button
 										onClick={(e) => {
 											e.preventDefault();
-											setSelectedImage(selectingImage);
-											setShowGalleryModal(false);
+											if (isMultiSelectable)
+												setSelectedImages((prev) => {
+													if (
+														prev?.filter(
+															(img) =>
+																img.id ==
+																selectingImage.id
+														).length > 0
+													)
+														return removeItem(
+															selectedImages,
+															selectingImage
+														);
+													else
+														return [
+															...prev,
+															selectingImage,
+														];
+												});
+											else {
+												setSelectedImage(
+													selectingImage
+												);
+												setShowGalleryModal(false);
+											}
 										}}
 										className="border absolute bottom-4 left-1/2 -translate-x-1/2 block border-blue-500 text-white bg-blue-500 rounded p-1 px-3 hover:bg-blue-600 duration-150"
 									>
-										Chọn ảnh này
+										{selectedImages?.filter(
+											(img) => img.id == selectingImage.id
+										).length > 0 && isMultiSelectable
+											? 'Bỏ chọn'
+											: 'Chọn ảnh này'}
 									</button>
 								)}
 							</div>

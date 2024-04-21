@@ -1,53 +1,61 @@
 import { Link } from 'react-router-dom';
 import DropDown from './DropDown';
+import CategoryService from '../../../services/CategoryService';
+import BrandService from '../../../services/BrandService';
+import { useEffect, useState } from 'react';
 
 function Menu() {
+	const [categories, setCategories] = useState([]);
+	const [brands, setBrands] = useState([]);
+
+	const { getCategories } = CategoryService();
+	const { getBrands } = BrandService();
+
+	const fetchCategories = async () => {
+		try {
+			setCategories(await getCategories());
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const fetchBrands = async () => {
+		try {
+			setBrands(await getBrands());
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	useEffect(() => {
+		fetchCategories();
+		fetchBrands();
+	}, []);
+
 	const menu = [
 		{ label: 'Trang chủ', link: '/' },
 		{
 			label: 'Sản phẩm',
 			link: '/products',
-			children: [
-				{
-					text: 'Sản phẩm 1',
-					link: '/products/1',
-				},
-				{
-					text: 'Sản phẩm 2',
-					link: '/products/2',
-				},
-				{
-					text: 'Bàn đầu giường',
-					link: '/products/3',
-				},
-				{
-					text: 'Sản phẩm 4',
-					link: '/products/4',
-				},
-				{
-					text: 'Sản phẩm 1',
-					link: '/products/1',
-				},
-				{
-					text: 'Sản phẩm 2',
-					link: '/products/2',
-				},
-				{
-					text: 'Bàn đầu giường',
-					link: '/products/3',
-				},
-				{
-					text: 'Sản phẩm 4',
-					link: '/products/4',
-				},
-				{
-					text: 'Sản phẩm 4',
-					link: '/products/4',
-				},
-			],
+			children: categories.map((category) => {
+				return {
+					item: category,
+					type: "category",
+					text: category.name,
+				};
+			}),
 		},
-		{ label: 'Phòng', link: '/rooms' },
-		{ label: 'Bộ sưu tập', link: '/collections' },
+		{
+			label: 'Thương hiệu',
+			link: '/brands',
+			children: brands.map((brand) => {
+				return {
+					item: brand,
+					type: "brand",
+					text: brand.name,
+				};
+			}),
+		},
 	];
 	return (
 		<div>

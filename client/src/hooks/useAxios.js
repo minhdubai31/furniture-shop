@@ -11,9 +11,13 @@ function useAxios() {
 		const requestIntercept = axios.interceptors.request.use(
 			(config) => {
 				if (!config.headers['Authorization']) {
-					config.headers[
-						'Authorization'
-					] = `Bearer ${localStorage.getItem('essayAccessToken')}`;
+					if (localStorage.getItem('essayAccessToken')) {
+						config.headers[
+							'Authorization'
+						] = `Bearer ${localStorage.getItem(
+							'essayAccessToken'
+						)}`;
+					}
 				}
 				return config;
 			},
@@ -24,25 +28,25 @@ function useAxios() {
 			(response) => response,
 			async (error) => {
 				const prevRequest = error.config;
-				console.log(prevRequest)
-				if (error.response.status == 403 && !prevRequest.sent) {
+				if (error.response.status == 403 && prevRequest.sent == false) {
 					prevRequest.sent = true;
 
 					if (!isRefreshed) {
 						isRefreshed = true;
 						try {
 							await refreshToken();
-						}
-						catch (error) {
+
+							prevRequest.headers[
+								'Authorization'
+							] = `Bearer ${localStorage.getItem(
+								'essayAccessToken'
+							)}`;
+
+							return axios(prevRequest);
+						} catch (error) {
 							return Promise.reject(error);
 						}
 					}
-
-					prevRequest.headers[
-						'Authorization'
-					] = `Bearer ${localStorage.getItem('essayAccessToken')}`;
-
-					return axios(prevRequest);
 				}
 				return Promise.reject(error);
 			}

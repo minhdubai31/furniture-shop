@@ -26,8 +26,8 @@ function CategoryPanel() {
 		}
 	};
 
-	const createCategoryHandler = async () => {
-		await createCategory();
+	const createCategoryHandler = async (name) => {
+		await createCategory(name);
 		fetchCategories();
 	};
 

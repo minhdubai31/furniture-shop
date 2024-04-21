@@ -20,8 +20,9 @@ const useRefreshToken = () => {
 			const role = response?.data?.role;
 			const name = response?.data?.name;
 			const username = response?.data?.username;
+			const id = response?.data?.id;
 
-			setAuth({ name, role, username });
+			setAuth({ id, name, role, username });
 
 			localStorage.setItem('essayAccessToken', newAccessToken);
 		} catch (error) {

@@ -48,4 +48,7 @@ public class OrderEntity {
 
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
     private List<CartAndOrderItemDetailEntity> items = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private AddressEntity address;
 }

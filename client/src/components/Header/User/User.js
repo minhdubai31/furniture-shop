@@ -3,9 +3,30 @@ import { faBagShopping, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import Tippy from '@tippyjs/react';
 import useAuth from '../../../hooks/useAuth';
+import { useEffect, useContext } from 'react';
+import UserService from '../../../services/UserService';
+import CartContext from '../../../context/CartProvider';
 
 function User() {
 	const { auth } = useAuth();
+	const { getUser } = UserService();
+	const { cartNumber, setCartNumber } = useContext(CartContext);
+
+	const getUserHandler = async (id) => {
+		if (auth)
+			try {
+				const user = await getUser(id);
+				setCartNumber(
+					user.cart?.reduce((prev, curr) => prev + curr?.amount, 0)
+				);
+			} catch (error) {
+				console.log(error);
+			}
+	};
+
+	useEffect(() => {
+		getUserHandler(auth?.id);
+	}, [auth]);
 
 	return (
 		<div className="flex items-center gap-5">
@@ -30,9 +51,19 @@ function User() {
 			{auth && (
 				<div>
 					<div className="flex gap-2 items-center">
-						<Link className="text-lg me-4" to="">
-							<FontAwesomeIcon icon={faBagShopping} />
-						</Link>
+						<div className="relative">
+							<Link
+								className="text-lg me-4"
+								to="/cart"
+								state={auth}
+							>
+								<FontAwesomeIcon icon={faBagShopping} />
+							</Link>
+
+							<div className="absolute top-0 right-1 w-3.5 h-3.5 rounded-full bg-red-500 text-white text-[0.65rem] flex justify-center items-center">
+								<span>{cartNumber}</span>
+							</div>
+						</div>
 						<FontAwesomeIcon
 							className="text-lg"
 							icon={faUserCircle}
@@ -49,6 +80,12 @@ function User() {
 							content={
 								<div className="grid grid-flow-row auto-cols-max gap-y-4 gap-x-16 my-2 mx-3">
 									<Link
+										to={'/order'}
+										className="text-gray-500 hover:text-black duration-300"
+									>
+										Đơn hàng của bạn
+									</Link>
+									<Link
 										to={'/logout'}
 										className="text-gray-500 hover:text-black duration-300"
 									>
@@ -57,10 +94,7 @@ function User() {
 								</div>
 							}
 						>
-							<Link
-								to="/"
-								className="text-white/50 hover:text-white duration-200"
-							>
+							<Link className="text-white/50 hover:text-white duration-200">
 								{auth.name}
 							</Link>
 						</Tippy>

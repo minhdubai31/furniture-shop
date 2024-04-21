@@ -101,7 +101,12 @@ public class UserController {
             @PathVariable final Integer id,
             @RequestBody final CartRequest request) {
         if (isHasPermission(id)) {
-            UserDto updatedUser = userService.updateCartItems(id, request.getAmount(), request.getProductId());
+            UserDto updatedUser = userService.updateCartItems(
+                    id,
+                    request.getAmount(),
+                    request.getProductId(),
+                    request.isReplace()
+            );
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);
         }
 

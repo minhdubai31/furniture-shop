@@ -39,13 +39,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .name(request.getName())
                 .email(request.getEmail())
                 .username(request.getUsername())
-                .birthday(request.getBirthday())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .authProvider(AuthProvider.LOCAL)
                 .role(Role.USER)
                 .build();
 
-        userService.create(newUser);
+        var createdUser = userService.create(newUser);
 
         var jwtToken = jwtService.generateToken(userMapper.mapFrom(newUser));
         var refreshToken = jwtService.generateRefreshToken(userMapper.mapFrom(newUser));
@@ -56,6 +55,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .role(newUser.getRole())
                 .name(newUser.getName())
                 .username(newUser.getUsername())
+                .id(createdUser.getId())
                 .build();
     }
 
@@ -81,6 +81,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .role(user.getRole())
                 .name(user.getName())
                 .username(user.getUsername())
+                .id(user.getId())
                 .build();
     }
 
@@ -109,6 +110,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         .role(user.getRole())
                         .name(user.getName())
                         .username(user.getUsername())
+                        .id(user.getId())
                         .build();
 
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);

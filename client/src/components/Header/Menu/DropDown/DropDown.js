@@ -17,16 +17,23 @@ function DropDown({ label, link, children }) {
 			offset={[-10, 10]}
 			animation="shift-away"
 			arrow={false}
+			duration={[200, 200]}
 			theme="light"
 			interactive={true}
 			interactiveDebounce={20}
 			content={
-				<div className="grid grid-flow-col grid-rows-6 auto-cols-max gap-y-4 gap-x-16 my-4 mx-6">
+				<div className="grid grid-flow-col grid-rows-5 auto-cols-max gap-y-4 gap-x-16 my-4 mx-6">
 					{children.map((child, index) => (
 						<Link
 							key={index}
-							to={child.link}
+							to={'/products'}
+							onClick={() => window.location.href.includes("products") && window.location.reload()}
 							className="text-gray-500 hover:text-black duration-300"
+							state={
+								child.type == 'brand'
+									? { selectedBrand: [child.item] }
+									: { selectedCategory: [child.item] }
+							}
 						>
 							{child.text}
 						</Link>
@@ -34,8 +41,15 @@ function DropDown({ label, link, children }) {
 				</div>
 			}
 		>
-			<Link to={link} className="hover:text-[#ffc83a] duration-200">
-				{label} <FontAwesomeIcon className='ps-1 pb-0.5 text-[0.5rem]' icon={faChevronDown} />
+			<Link
+				to={link}
+				className="hover:text-[#ffc83a] duration-200"
+			>
+				{label}{' '}
+				<FontAwesomeIcon
+					className="ps-1 pb-0.5 text-[0.5rem]"
+					icon={faChevronDown}
+				/>
 			</Link>
 		</Tippy>
 	);

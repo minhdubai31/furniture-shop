@@ -36,9 +36,9 @@ function BrandForm({ createFn, updateBrand, updateFn, state }) {
 
 	useEffect(() => {
 		if (updateBrand) {
-			setName(updateBrand.name);
-			setLogoImage(updateBrand.logo);
-			setDescription(updateBrand.description);
+			setName(updateBrand.name ?? '');
+			setLogoImage(updateBrand.logo ?? '');
+			setDescription(updateBrand.description ?? '');
 		} else clearAllFields();
 
 		const handleClickOutside = (event) => {
@@ -138,7 +138,7 @@ function BrandForm({ createFn, updateBrand, updateFn, state }) {
 											}}
 										>
 											{logoImage?.thumbnailPath ? (
-												<img
+												<img loading="lazy"
 													className="max-h-44 rounded hover:brightness-75 duration-150"
 													src={
 														process.env

@@ -17,7 +17,7 @@ public interface ProductService {
 
     void destroy(Integer id);
 
-    ProductDto addGallery(Integer id, List<Integer> imagesId);
+    ProductDto updateGallery(Integer id, List<Integer> imagesId);
 
     ProductDto addComment(Integer userId, Integer productId, Integer replyId, String content);
 }

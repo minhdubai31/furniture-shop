@@ -1,28 +1,32 @@
 import useAxios from '../hooks/useAxios';
+import axios from '../api/publicAxios';
+import { JsogService } from 'jsog-typescript';
+
 const CATEGORY_API_URL = '/api/category/';
 
 function CategoryService() {
-	const axios = useAxios();
+	const loggedInAxios = useAxios();
+	const JSOG = new JsogService();
 
 	const getCategories = async () => {
 		const response = await axios.get(CATEGORY_API_URL);
-		return response.data;
+		return JSOG.deserialize(response.data);
 	};
 
 	const createCategory = async (name) => {
-		await axios.post(CATEGORY_API_URL, {
+		await loggedInAxios.post(CATEGORY_API_URL, {
 			name,
 		});
 	};
 
 	const updateCategory = async (id, name) => {
-		await axios.patch(CATEGORY_API_URL + id, {
+		await loggedInAxios.patch(CATEGORY_API_URL + id, {
 			name,
 		});
 	};
 
 	const deleteCategory = async (id) => {
-		await axios.delete(CATEGORY_API_URL + id);
+		await loggedInAxios.delete(CATEGORY_API_URL + id);
 	};
 
 	return { getCategories, createCategory, updateCategory, deleteCategory };

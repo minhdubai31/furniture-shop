@@ -22,7 +22,7 @@ public interface UserService {
     UserDto addAddress(Integer id, AddressDto newAddress);
     UserDto deleteAddress(Integer id, Integer addressId);
 
-    UserDto updateCartItems(Integer id, Integer amount, Integer productId);
+    UserDto updateCartItems(Integer id, Integer amount, Integer productId, boolean isReplace);
 
     void addToFavorites(Integer id, Integer productId);
 

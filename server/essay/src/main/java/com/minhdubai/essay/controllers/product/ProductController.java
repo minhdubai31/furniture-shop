@@ -48,7 +48,7 @@ public class ProductController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping(path = "")
+    @GetMapping(path = "/find")
     public ResponseEntity<List<ProductDto>> findByName(@RequestParam final String name) {
         List<ProductDto> foundProducts = productService.findByName(name);
 
@@ -88,7 +88,7 @@ public class ProductController {
     }
 
     @PostMapping(path = "/{id}/gallery")
-    public ResponseEntity<ProductDto> addGallery(
+    public ResponseEntity<ProductDto> updateGallery(
             @PathVariable final Integer id,
             @RequestBody final List<Integer> imagesId
     ) {
@@ -97,7 +97,7 @@ public class ProductController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        ProductDto updatedProduct = productService.addGallery(
+        ProductDto updatedProduct = productService.updateGallery(
                 id,
                 imagesId
         );
@@ -105,7 +105,7 @@ public class ProductController {
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
 
-    @PostMapping(path = "/{productId}/comments")
+    @PostMapping(path = "/{productId}/comment")
     public ResponseEntity<ProductDto> addComment(
             @PathVariable final Integer productId,
             @RequestBody final CommentRequest request

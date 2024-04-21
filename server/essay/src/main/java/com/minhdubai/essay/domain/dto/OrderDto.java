@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.minhdubai.essay.domain.OrderStatus;
 import com.minhdubai.essay.domain.PaymentStatus;
 import com.minhdubai.essay.domain.PaymentType;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,10 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id"
-)
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class OrderDto {
 
     private Integer id;
@@ -30,6 +28,7 @@ public class OrderDto {
     @JsonIgnoreProperties({"orders", "cart"})
     private UserDto user;
 
+    private AddressDto address;
     private OrderStatus orderStatus;
     private PaymentStatus paymentStatus;
     private PaymentType paymentType;

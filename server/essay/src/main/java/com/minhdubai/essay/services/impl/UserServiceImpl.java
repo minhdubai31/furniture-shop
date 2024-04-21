@@ -106,7 +106,9 @@ public class UserServiceImpl implements UserService {
         // Add the new address to the user
         newAddressEntity.setUser(updateUser);
 
-        addressRepository.save(newAddressEntity);
+        updateUser.getAddresses().add(newAddressEntity);
+
+        userRepository.save(updateUser);
         return this.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
@@ -117,7 +119,8 @@ public class UserServiceImpl implements UserService {
 
         // Check current user is owner of the address or not
         if (Objects.equals(removeAddress.getUser().getId(), id)) {
-            addressRepository.delete(removeAddress);
+            removeAddress.setUser(null);
+            addressRepository.save(removeAddress);
         } else {
             throw new RuntimeException("User with id = " + id + " is not owner of this address");
         }
@@ -125,7 +128,7 @@ public class UserServiceImpl implements UserService {
         return this.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
-    public UserDto updateCartItems(Integer id, Integer amount, Integer productId) {
+    public UserDto updateCartItems(Integer id, Integer amount, Integer productId, boolean isReplace) {
         UserEntity updateUser = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User with id = " + id + " not found"));
 
@@ -149,8 +152,12 @@ public class UserServiceImpl implements UserService {
 
         // If the product existed in the user cart, update the amount
         else {
-            existedItem.setAmount(existedItem.getAmount() + amount);
-            itemRepository.save(existedItem);
+            if(amount == 0) {
+                itemRepository.delete(existedItem);
+            } else {
+                existedItem.setAmount(isReplace ? amount : existedItem.getAmount()+amount);
+                itemRepository.save(existedItem);
+            }
         }
 
         return this.findById(id).orElseThrow(EntityNotFoundException::new);

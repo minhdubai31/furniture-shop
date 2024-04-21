@@ -55,8 +55,9 @@ public class ImageServiceImpl implements ImageService {
         // Save the file to the specified path
         image.transferTo(targetFile);
 
+        Thumbnails.of(targetFile).size(2000, 2000).toFile(targetFile);
         Thumbnails.of(targetFile)
-                .size(300, 300)
+                .size(500, 500)
                 .toFiles(Rename.PREFIX_DOT_THUMBNAIL);
 
         // Convert file size to readable

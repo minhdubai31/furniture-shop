@@ -62,21 +62,13 @@ function Login() {
 			value: password,
 			changeValue: setPassword,
 		},
-		{
-			id: 'birthday',
-			name: 'birthday',
-			type: 'date',
-			label: 'Ngày sinh',
-			value: birthday,
-			changeValue: setBirthday,
-		},
 	];
 
 	const registerHandler = async (e) => {
 		e.preventDefault();
 
 		try {
-			register(name, username, email, password, birthday);
+			register(name, username, email, password);
 		} catch (err) {
 			console.log(err);
 			if (!err.response) setErrorMessage('Không thể kết nối với máy chủ');
@@ -86,7 +78,6 @@ function Login() {
 
 	return (
 		<div>
-			<Header />
 			<div className="flex justify-center bg-gray-100">
 				<div className="w-[500px] bg-white p-14 py-16 border rounded-md my-6 text-center">
 					<DecoratedHeading content="Đăng ký" />
@@ -166,7 +157,6 @@ function Login() {
 					</div>
 				</div>
 			</div>
-			<Footer />
 		</div>
 	);
 }

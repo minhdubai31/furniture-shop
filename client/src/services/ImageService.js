@@ -1,12 +1,15 @@
 import useAxios from '../hooks/useAxios';
+import { JsogService } from 'jsog-typescript';
+
 const IMAGES_RESOURCE_URL = '/api/image/';
 
 function ImageService() {
 	const axios = useAxios();
+	const JSOG = new JsogService();
 
 	const getImages = async () => {
 		const response = await axios.get(IMAGES_RESOURCE_URL);
-		return response.data.reverse();
+		return JSOG.deserialize(response.data.reverse());
 	};
 
 	const uploadImage = async (file, setUploadProgress) => {

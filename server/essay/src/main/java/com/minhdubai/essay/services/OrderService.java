@@ -7,7 +7,11 @@ import java.util.List;
 public interface OrderService {
     List<OrderDto> findAll();
 
-    OrderDto transferCartToOrder(Integer userId);
+    List<OrderDto> findAllByUserId(Integer userId);
 
-    OrderDto buyNowOrder(Integer userId, Integer productId);
+    OrderDto transferCartToOrder(Integer userId, Integer addressId);
+
+    OrderDto updateOrder(Integer id, OrderDto updateFields);
+
+    OrderDto buyNowOrder(Integer userId, Integer productId, Integer quantity, Integer addressId);
 }
