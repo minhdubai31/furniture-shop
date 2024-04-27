@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 import DecoratedHeading from '../../components/DecoratedHeading';
 import BrandService from '../../services/BrandService';
+import nl2br from 'react-nl2br';
 
 function Brands() {
 	const { getBrands } = BrandService();
@@ -33,7 +34,7 @@ function Brands() {
 						<div className='rounded-md flex flex-col items-center bg-black/5 p-5 px-10'>
                      <img loading="lazy" className='h-36 object-contain' src={process.env.REACT_APP_BACKEND_SERVER + brand.logo.path} />
                      <h5 className='text-xl font-bold upper mt-5'>{brand.name}</h5>
-                     <p className='w-full indent-8 text-sm mt-2'>{brand.description}</p>
+                     <p className='w-full text-sm mt-2'>{nl2br(brand.description)}</p>
                   </div>
 					))}
 				</div>

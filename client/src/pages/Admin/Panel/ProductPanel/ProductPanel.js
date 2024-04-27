@@ -134,7 +134,7 @@ function ProductPanel() {
 		},
 		{
 			label: 'Thông tin',
-			renderCell: (item) => item.description,
+			renderCell: (item) => <span className='text-wrap'>{item.description}</span>,
 			resize: true,
 		},
 		{

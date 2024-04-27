@@ -459,7 +459,7 @@ function ProductForm({ createFn, updateProduct, updateFn, state }) {
 											id="length"
 											type="number"
 											min={0}
-											step={0.1}
+											step={0.01}
 											name="length"
 											placeholder="Nhập chiều dài"
 											value={length}
@@ -481,7 +481,7 @@ function ProductForm({ createFn, updateProduct, updateFn, state }) {
 											id="width"
 											type="number"
 											min={0}
-											step={0.1}
+											step={0.01}
 											name="width"
 											placeholder="Nhập chiều rộng"
 											value={width}
@@ -503,7 +503,7 @@ function ProductForm({ createFn, updateProduct, updateFn, state }) {
 											id="height"
 											type="number"
 											min={0}
-											step={1}
+											step={0.01}
 											name="height"
 											placeholder="Nhập chiều cao"
 											value={height}
@@ -525,7 +525,7 @@ function ProductForm({ createFn, updateProduct, updateFn, state }) {
 											id="weight"
 											type="number"
 											min={0}
-											step={1}
+											step={0.01}
 											name="weight"
 											placeholder="Nhập cân nặng"
 											value={weight}
